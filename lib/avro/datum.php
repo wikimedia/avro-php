@@ -310,6 +310,8 @@ class AvroIOBinaryEncoder
     {
       $str .= chr(($n & 0x7F) | 0x80);
       $n >>= 7;
+      // High Bit Must Be Zero
+      $n = $n & ~(0x7F << 57);
     }
     $str .= chr($n);
     return $str;
@@ -882,7 +884,9 @@ class AvroIOBinaryDecoder
       $n |= (($b & 0x7f) << $shift);
       $shift += 7;
     }
-    return (($n >> 1) ^ -($n & 1));
+    // Right Move High Bit Must Be Zero;
+    $highBitZero = ~(1 << 63);
+    return ((($n >> 1) & $highBitZero) ^ -($n & 1));
   }
 
   /**
