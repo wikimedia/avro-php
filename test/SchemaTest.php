@@ -409,6 +409,11 @@ class SchemaTest extends PHPUnit_Framework_TestCase
     {"type":"record", "name":"foo", "doc":"doc string",
      "fields":[{"name":"bar", "type":"int", "order":"bad"}]}
 ', false);
+     // `"default":null` should not be lost in `to_avro`.
+     $record_examples []= new SchemaExample(
+        '{"type":"record","name":"foo","fields":[{"name":"bar","type":["null","string"],"default":null}]}',
+        true,
+        '{"type":"record","name":"foo","fields":[{"name":"bar","type":["null","string"],"default":null}]}');
 
     self::$examples = array_merge($primitive_examples,
                                   $fixed_examples,
